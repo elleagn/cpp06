@@ -1,5 +1,5 @@
-*.out
-*.o
-objects
 .vscode
+a.out
 */ex*
+objects
+*.o
