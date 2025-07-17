@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/17 22:09:59 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/17 22:35:33 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,17 @@ bool castFromInt(std::string scalar) {
     float f;
     double d;
 
+    // Check overflow forst to avoid atoi segfault
+    if (scalar.length() > 11 || scalar > "2147483647" || scalar > "-2147483648" || scalar > "+2147483647")
+        return (false);
+
     i = atoi(scalar.c_str());
+
+    // Check invalid int represntation
+    if (i == 0 && scalar.find_first_not_of('0') != std::string::npos)
+        return (false);
+
+    // Checks for char because it is a downcast and static cast does not perform checks
     if (isprint(i)) {
         c = i;
         std::cout << "char: " << c << std::endl;
@@ -111,13 +121,15 @@ bool castFromInt(std::string scalar) {
     else
         std::cout << "char: non displayable" << std::endl;
 
+    // Upcast so no checks are needed
     f = static_cast<float>(i);
     d = static_cast<double>(i);
 
     std::cout << "int: " << i << std::endl;
     std::cout << "float: " << f << ".0f" << std::endl;
     std::cout << "double: " << d << ".0" << std::endl;
-    return (false);
+
+    return (true);
 
 }
 
@@ -138,8 +150,8 @@ bool castInvalid(std::string scalar) {
     (void)scalar;
     std::cout << "char: impossible" << std::endl;
     std::cout << "int: impossible" << std::endl;
-    std::cout << "float: impossible" << std::endl;
-    std::cout << "double: impossible" << std::endl;
+    std::cout << "float: nanf" << std::endl;
+    std::cout << "double: nan" << std::endl;
 
     return (true);
 
