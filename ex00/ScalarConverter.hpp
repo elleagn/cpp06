@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:15:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/17 22:07:36 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/19 17:45:31 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 
 #include <string>
 #include <iostream>
-#include <iomanip>
-#include <exception>
 #include <cstdlib>
+#include <limits>
+#include <cstdio>
+#include <cmath>
 
 #define CHAR 0
 #define INT 1

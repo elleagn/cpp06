@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/19 16:08:31 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/19 19:06:44 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int getRealType(std::string scalar) {
     // To do: nan inf etc
     // .f +f -f
     // Check cpp reference litterals
+    // add e+ e-
 }
 
 void castFromChar(std::string scalar) {
@@ -127,33 +128,102 @@ void castFromInt(std::string scalar) {
 
     if (i < 0 || i > 127)
         std::cout << "char: impossible" << std::endl;
-    else if (isprint(i)) {
-        c = i;
-        std::cout << "char: " << c << std::endl;
+    else {
+        c = static_cast<char>(i);
+        if (isprint(c))
+            std::cout << "char: " << c << std::endl;
+        else
+            std::cout << "char: non displayable" << std::endl;
     }
-    else
-        std::cout << "char: non displayable" << std::endl;
 
     // Upcast so no checks are needed
     f = static_cast<float>(i);
     d = static_cast<double>(i);
 
     std::cout << "int: " << i << std::endl;
-    std::cout << "float: " << f << ".0f" << std::endl;
-    std::cout << "double: " << d << ".0" << std::endl;
+    std::cout << "float: " << f << (i < 100000 && i > -1000000 ? ".0" : "") << "f" << std::endl;
+    std::cout << "double: " << d << (i < 100000 && i > -1000000 ? ".0" : "") << std::endl;
 
 }
 
 void castFromFloat(std::string scalar) {
 
-    (void)scalar;
-    std::cout << "float" << std::endl;
+    char c = 0;
+    int i = 0;
+    float f = 0;
+    double d = 0;
+
+    f = strtof(scalar.c_str(), NULL);
+
+    bool overflow = false;
+    if (f > -2147483648.0f && f < 2147483647.0f)
+        i = static_cast<int>(f);
+    else
+        overflow = true;
+
+    // Checks for char because it is a downcast and static cast does not perform checks
+
+    if (i != f || i < 0 || i > 127)
+        std::cout << "char: impossible" << std::endl;
+    else {
+        c = static_cast<char>(f);
+        if (isprint(c))
+            std::cout << "char: " << c << std::endl;
+        else
+            std::cout << "char: non displayable" << std::endl;
+    }
+
+    // Upcast so no checks are needed
+    d = static_cast<double>(f);
+
+    std::cout << "int: ";
+    if (overflow)
+        std::cout << "overflow";
+    else
+        std::cout << i;
+    std::cout << std::endl;
+    std::cout << "float: " << f << (i == f && i < 100000 && i > -1000000 ? ".0" : "") << "f" << std::endl;
+    std::cout << "double: " << d << (i == f && i < 100000 && i > -1000000 ? ".0" : "") << std::endl;
 
 }
 
 void castFromDouble(std::string scalar) {
-    (void)scalar;
-    std::cout << "double" << std::endl;
+    char c = 0;
+    int i = 0;
+    float f = 0;
+    double d = 0;
+
+    d = strtod(scalar.c_str(), NULL);
+
+    bool overflow = false;
+    if (d > -2147483648.0 && d < 2147483647.0)
+        i = static_cast<int>(d);
+    else
+        overflow = true;
+
+    // Checks for char because it is a downcast and static cast does not perform checks
+
+    if (i != d || i < 0 || i > 127)
+        std::cout << "char: impossible" << std::endl;
+    else {
+        c = static_cast<char>(d);
+        if (isprint(c))
+            std::cout << "char: " << c << std::endl;
+        else
+            std::cout << "char: non displayable" << std::endl;
+    }
+
+    // Upcast so no checks are needed
+    f = static_cast<double>(d);
+
+    std::cout << "int: ";
+    if (overflow)
+        std::cout << "overflow";
+    else
+        std::cout << i;
+    std::cout << std::endl;
+    std::cout << "float: " << f << (i == f && i < 100000 && i > -1000000 ? ".0" : "") << "f" << std::endl;
+    std::cout << "double: " << d << (i == f && i < 100000 && i > -1000000 ? ".0" : "") << std::endl;
 }
 
 void castInvalid(std::string scalar) {
