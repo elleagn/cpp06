@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/18 22:24:17 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/19 16:08:31 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int getRealType(std::string scalar) {
     char current;
 
     // Handle the sign
-    if (scalar[0] == '+' && scalar[0] == '-')
+    if (scalar[0] == '+' || scalar[0] == '-')
         sign = true;
 
     // Check for invalid characters inside the string
@@ -76,20 +76,23 @@ int getRealType(std::string scalar) {
         return (DOUBLE);
 
     // Deal with int overflow
-    if (scalar.length() - sign <= 10)
+    size_t len = scalar.length();
+    size_t firstSignificant = scalar.find_first_not_of('0', sign);
+    size_t significantDigits = len - firstSignificant;
+
+    if (significantDigits < 10)
         return (INT);
-    if (scalar.length() - sign > 10)
+    if (significantDigits > 10)
         return (INVALID);
-    if (!sign && scalar > "2147483647")
+    if ((!sign || scalar[0] == '+') && scalar.compare(firstSignificant, 10, "2147483647") > 0)
         return (INVALID);
-    if (scalar[0] == '+' && scalar > "+2147483647")
-        return (INVALID);
-    if (scalar[0] == '-' && scalar > "-2147483648")
+    if (scalar[0] == '-' && scalar.compare(firstSignificant, 10, "2147483648") > 0)
         return (INVALID);
 
     return (INT);
     // To do: nan inf etc
     // .f +f -f
+    // Check cpp reference litterals
 }
 
 void castFromChar(std::string scalar) {
@@ -121,12 +124,13 @@ void castFromInt(std::string scalar) {
     i = atoi(scalar.c_str());
 
     // Checks for char because it is a downcast and static cast does not perform checks
-    if (isprint(i)) {
+
+    if (i < 0 || i > 127)
+        std::cout << "char: impossible" << std::endl;
+    else if (isprint(i)) {
         c = i;
         std::cout << "char: " << c << std::endl;
     }
-    else if (i < 0 || i > 127)
-        std::cout << "char: impossible" << std::endl;
     else
         std::cout << "char: non displayable" << std::endl;
 
