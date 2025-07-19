@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/17 22:35:33 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/18 22:24:17 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,45 +41,63 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& src) {
 
 int getRealType(std::string scalar) {
 
+    // Check if the string represents a char
+    if (scalar.size() == 1 && !isdigit(scalar[0]))
+        return (CHAR);
+
     bool dot = false;
-    size_t i = 0;
+    bool sign = false;
+    bool f = false;
+    char current;
 
     // Handle the sign
     if (scalar[0] == '+' && scalar[0] == '-')
-        i++;
+        sign = true;
 
     // Check for invalid characters inside the string
-    while (i < scalar.length() - 1) {
-        if (scalar[i] == '.' && !dot)
-            dot = true;
-        else if (!isdigit(scalar[i]))
+    for (size_t i = 0; i < scalar.length() - sign; i++) {
+
+        if (f)
             return (INVALID);
-        i++;
+        current =  scalar[i + sign];
+        if (current == '.' && !dot)
+            dot = true;
+        else if (current == 'f' && dot)
+            f = true;
+        else if (!isdigit(current))
+            return (INVALID);
+
     }
 
     // Determine the type depending on the presence of a dot or a final f
-    if (scalar[i] == 'f')
+    if (dot && f)
         return (FLOAT);
-    else if (!isdigit(scalar[i]))
-        return (INVALID);
-    else if (dot)
+    if (dot)
         return (DOUBLE);
-    return (INT);
 
+    // Deal with int overflow
+    if (scalar.length() - sign <= 10)
+        return (INT);
+    if (scalar.length() - sign > 10)
+        return (INVALID);
+    if (!sign && scalar > "2147483647")
+        return (INVALID);
+    if (scalar[0] == '+' && scalar > "+2147483647")
+        return (INVALID);
+    if (scalar[0] == '-' && scalar > "-2147483648")
+        return (INVALID);
+
+    return (INT);
     // To do: nan inf etc
     // .f +f -f
 }
 
-bool castFromChar(std::string scalar) {
+void castFromChar(std::string scalar) {
 
     char c;
     int i;
     float f;
     double d;
-
-    // Check if the string represents a char
-    if (scalar.size() != 1 || isdigit(scalar[0]))
-        return (false);
 
     c = scalar[0];
     i = static_cast<int>(c);
@@ -91,25 +109,16 @@ bool castFromChar(std::string scalar) {
     std::cout << "float: " << f << ".0f" << std::endl;
     std::cout << "double: " << d << ".0" << std::endl;
 
-    return (true);
 }
 
-bool castFromInt(std::string scalar) {
+void castFromInt(std::string scalar) {
 
     char c;
     int i;
     float f;
     double d;
 
-    // Check overflow forst to avoid atoi segfault
-    if (scalar.length() > 11 || scalar > "2147483647" || scalar > "-2147483648" || scalar > "+2147483647")
-        return (false);
-
     i = atoi(scalar.c_str());
-
-    // Check invalid int represntation
-    if (i == 0 && scalar.find_first_not_of('0') != std::string::npos)
-        return (false);
 
     // Checks for char because it is a downcast and static cast does not perform checks
     if (isprint(i)) {
@@ -129,31 +138,24 @@ bool castFromInt(std::string scalar) {
     std::cout << "float: " << f << ".0f" << std::endl;
     std::cout << "double: " << d << ".0" << std::endl;
 
-    return (true);
+}
+
+void castFromFloat(std::string scalar) {
+
+    (void)scalar;
+    std::cout << "float" << std::endl;
 
 }
 
-bool castFromFloat(std::string scalar) {
-
+void castFromDouble(std::string scalar) {
     (void)scalar;
-    return (false);
-
+    std::cout << "double" << std::endl;
 }
 
-bool castFromDouble(std::string scalar) {
-    (void)scalar;
-    return (false);
-}
-
-bool castInvalid(std::string scalar) {
+void castInvalid(std::string scalar) {
 
     (void)scalar;
-    std::cout << "char: impossible" << std::endl;
-    std::cout << "int: impossible" << std::endl;
-    std::cout << "float: nanf" << std::endl;
-    std::cout << "double: nan" << std::endl;
-
-    return (true);
+    std::cout << scalar << " is not a valid char literal" << std::endl;
 
 }
 
@@ -163,13 +165,10 @@ bool castInvalid(std::string scalar) {
 
 void ScalarConverter::convert(std::string scalar) {
 
-    bool (*cast[5])(std::string scalar) = {castFromChar, castFromInt,
+    void (*cast[5])(std::string scalar) = {castFromChar, castFromInt,
         castFromFloat, castFromDouble, castInvalid};
 
-    for (int i = 0; i < 5; i++) {
-        if (cast[i](scalar))
-            return ;
-    }
+    cast[getRealType(scalar)](scalar);
 }
 
 /* ************************************************************************** */
