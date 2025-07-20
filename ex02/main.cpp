@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 11:32:56 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/20 11:41:32 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 19:57:24 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,34 @@ void identify(Base* p) {
     }
 }
 
+void identify(Base& p) {
+
+    try {
+        (void)dynamic_cast<A&>(p);
+        std::cout << "p refers to class A" << std::endl;
+    }
+    catch(...) {
+
+    }
+    try {
+        (void)dynamic_cast<B&>(p);
+        std::cout << "p refers to class B" << std::endl;
+    }
+    catch(...) {
+
+    }
+    try {
+        (void)dynamic_cast<C&>(p);
+        std::cout << "p refers to class C" << std::endl;
+    }
+    catch(...) {
+
+    }
+}
+
 int main() {
     Base* b = generate();
     identify(b);
+    identify(*b);
     delete b;
 }
