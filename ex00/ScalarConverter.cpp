@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/20 22:22:11 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 23:18:37 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,9 @@ void castFromFloat(std::string scalar) {
     d = static_cast<double>(f);
 
     std::cout << "int: ";
-    if (overflow)
+    if (f != f)
+        std::cout << "impossible";
+    else if (overflow)
         std::cout << "overflow";
     else
         std::cout << i;
@@ -163,7 +165,9 @@ void castFromDouble(std::string scalar) {
     f = static_cast<double>(d);
 
     std::cout << "int: ";
-    if (overflow)
+    if (d != d)
+        std::cout << "impossible";
+    else if (overflow)
         std::cout << "overflow";
     else
         std::cout << i;

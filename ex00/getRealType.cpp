@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 22:21:32 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/20 23:04:23 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 23:13:38 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,32 @@ int checkFloating(std::string scalar, bool sign, size_t len) {
 
 }
 
+int checkInt(std::string scalar, bool sign, size_t len) {
+
+    size_t firstSignificant = scalar.find_first_not_of('0', sign);
+    size_t significantDigits = len - firstSignificant;
+
+    if (significantDigits < 10)
+        return (INT);
+    if (significantDigits > 10)
+        return (INVALID);
+    if ((!sign || scalar[0] == '+') && scalar.compare(firstSignificant, 10, "2147483647") > 0)
+        return (INVALID);
+    if (scalar[0] == '-' && scalar.compare(firstSignificant, 10, "2147483648") > 0)
+        return (INVALID);
+
+    return (INT);
+
+}
+
 int getRealType(std::string scalar) {
 
     size_t len = scalar.length();
+
+    if (scalar == "+inff" || scalar == "-inff" || scalar == "nanf")
+        return (FLOAT);
+    if (scalar == "+inf" || scalar == "-inf" || scalar == "nan")
+        return (DOUBLE);
 
     // Check if the string represents a char
     if (scalar.size() == 1 && !isdigit(scalar[0]))
@@ -72,20 +95,5 @@ int getRealType(std::string scalar) {
     if (type != UNDEFINED)
         return (type);
 
-
-    // Deal with int overflow
-    size_t firstSignificant = scalar.find_first_not_of('0', sign);
-    size_t significantDigits = len - firstSignificant;
-
-    if (significantDigits < 10)
-        return (INT);
-    if (significantDigits > 10)
-        return (INVALID);
-    if ((!sign || scalar[0] == '+') && scalar.compare(firstSignificant, 10, "2147483647") > 0)
-        return (INVALID);
-    if (scalar[0] == '-' && scalar.compare(firstSignificant, 10, "2147483648") > 0)
-        return (INVALID);
-
-    return (INT);
-    // To do: nan inf etc
+    return (checkInt(scalar, sign, len));
 }
