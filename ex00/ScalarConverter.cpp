@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/19 19:06:44 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 20:19:48 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,25 @@ int getRealType(std::string scalar) {
         return (CHAR);
 
     bool dot = false;
+    // bool e;
     bool sign = false;
     bool f = false;
     char current;
+    size_t len = scalar.length();
 
     // Handle the sign
     if (scalar[0] == '+' || scalar[0] == '-')
         sign = true;
 
     // Check for invalid characters inside the string
-    for (size_t i = 0; i < scalar.length() - sign; i++) {
+    for (size_t i = 0; i < len - sign; i++) {
 
         if (f)
             return (INVALID);
         current =  scalar[i + sign];
-        if (current == '.' && !dot)
+        if (current == '.' && !dot
+                && ((i > 0 && isdigit(scalar[i- 1]))
+                        || (i < len - 1 && isdigit(scalar[i + 1]))))
             dot = true;
         else if (current == 'f' && dot)
             f = true;
@@ -76,7 +80,6 @@ int getRealType(std::string scalar) {
         return (DOUBLE);
 
     // Deal with int overflow
-    size_t len = scalar.length();
     size_t firstSignificant = scalar.find_first_not_of('0', sign);
     size_t significantDigits = len - firstSignificant;
 
