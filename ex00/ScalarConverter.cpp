@@ -6,11 +6,13 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/20 22:14:04 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 22:22:11 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConverter.hpp"
+
+int getRealType(std::string scalar);
 
 /* ************************ CONSTRUCTORS / DESTRUCTORS ********************** */
 
@@ -39,71 +41,6 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& src) {
 
 /* ********************************** UTILS ********************************* */
 
-int getRealType(std::string scalar) {
-
-    // Check if the string represents a char
-    if (scalar.size() == 1 && !isdigit(scalar[0]))
-        return (CHAR);
-
-    bool dot = false;
-    bool e;
-    bool hasDigit = false;
-    bool sign = false;
-    bool f = false;
-    char current;
-    size_t len = scalar.length();
-
-    // Handle the sign
-    if (scalar[0] == '+' || scalar[0] == '-')
-        sign = true;
-
-    // Check for invalid characters inside the string
-    for (size_t i = 0; i < len - sign; i++) {
-
-        if (f)
-            return (INVALID);
-        current =  scalar[i + sign];
-        if (current == '.' && !dot)
-            dot = true;
-        else if (current == 'f' && dot && hasDigit)
-            f = true;
-        else if (!e && i != len - 1 && current == 'e' && (scalar[i + 1] == '+' || scalar[i + 1] == '-')) {
-            i++;
-            e = true;
-        }
-        else if (!e && i != len - 1 && isdigit(scalar[i + 1]) && current == 'e')
-            e = true;
-        else if (!isdigit(current))
-            return (INVALID);
-        else if (!hasDigit)
-            hasDigit = true;
-
-    }
-
-    // Determine the type depending on the presence of a dot or a final f
-    if (f)
-        return (FLOAT);
-    if (dot || e)
-        return (DOUBLE);
-
-    // Deal with int overflow
-    size_t firstSignificant = scalar.find_first_not_of('0', sign);
-    size_t significantDigits = len - firstSignificant;
-
-    if (significantDigits < 10)
-        return (INT);
-    if (significantDigits > 10)
-        return (INVALID);
-    if ((!sign || scalar[0] == '+') && scalar.compare(firstSignificant, 10, "2147483647") > 0)
-        return (INVALID);
-    if (scalar[0] == '-' && scalar.compare(firstSignificant, 10, "2147483648") > 0)
-        return (INVALID);
-
-    return (INT);
-    // To do: nan inf etc
-    // Check cpp reference litterals
-    // add e+ e-
-}
 
 void castFromChar(std::string scalar) {
 

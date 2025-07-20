@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 08:15:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/19 17:45:31 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 22:26:53 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@
 #include <cstdio>
 #include <cmath>
 
-#define CHAR 0
-#define INT 1
-#define FLOAT 2
-#define DOUBLE 3
-#define INVALID 4
+typedef enum e_type {
+    CHAR,
+    INT,
+    FLOAT,
+    DOUBLE,
+    INVALID,
+    UNDEFINED
+} t_type;
 
 class ScalarConverter {
 
