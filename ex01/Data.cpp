@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:35:40 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/19 19:35:55 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 09:30:08 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,17 @@ Data::Data() {
 
 Data::Data(const Data& src) {
 
-    (void)src;
+    str = src.str;
+
+}
+
+Data::Data(const std::string& str) {
+
+    this->str = str;
+
+}
+
+Data::~Data() {
 
 }
 
@@ -33,6 +43,14 @@ Data& Data::operator=(const Data& src) {
     (void)src;
     return (*this);
 
+}
+
+/* ************************************************************************** */
+
+/* ************************** GETTERS / SETTERS ***************************** */
+
+const std::string& Data::getString() const {
+    return (str);
 }
 
 /* ************************************************************************** */

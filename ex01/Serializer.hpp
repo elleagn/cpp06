@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 19:23:30 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/19 19:32:50 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 09:34:32 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ class Serializer {
 
         Serializer& operator=(const Serializer& src);
 
-        uintptr_t serialize(Data* ptr);
-        Data* deserialize(uintptr_t raw);
+        static uintptr_t serialize(Data* ptr);
+        static Data* deserialize(uintptr_t raw);
 
 };
 
