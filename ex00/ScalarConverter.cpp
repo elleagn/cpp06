@@ -6,7 +6,7 @@
 /*   By: gozon <gozon@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 08:51:24 by gozon             #+#    #+#             */
-/*   Updated: 2025/07/20 20:19:48 by gozon            ###   ########.fr       */
+/*   Updated: 2025/07/20 22:14:04 by gozon            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int getRealType(std::string scalar) {
         return (CHAR);
 
     bool dot = false;
-    // bool e;
+    bool e;
+    bool hasDigit = false;
     bool sign = false;
     bool f = false;
     char current;
@@ -62,21 +63,27 @@ int getRealType(std::string scalar) {
         if (f)
             return (INVALID);
         current =  scalar[i + sign];
-        if (current == '.' && !dot
-                && ((i > 0 && isdigit(scalar[i- 1]))
-                        || (i < len - 1 && isdigit(scalar[i + 1]))))
+        if (current == '.' && !dot)
             dot = true;
-        else if (current == 'f' && dot)
+        else if (current == 'f' && dot && hasDigit)
             f = true;
+        else if (!e && i != len - 1 && current == 'e' && (scalar[i + 1] == '+' || scalar[i + 1] == '-')) {
+            i++;
+            e = true;
+        }
+        else if (!e && i != len - 1 && isdigit(scalar[i + 1]) && current == 'e')
+            e = true;
         else if (!isdigit(current))
             return (INVALID);
+        else if (!hasDigit)
+            hasDigit = true;
 
     }
 
     // Determine the type depending on the presence of a dot or a final f
-    if (dot && f)
+    if (f)
         return (FLOAT);
-    if (dot)
+    if (dot || e)
         return (DOUBLE);
 
     // Deal with int overflow
@@ -94,7 +101,6 @@ int getRealType(std::string scalar) {
 
     return (INT);
     // To do: nan inf etc
-    // .f +f -f
     // Check cpp reference litterals
     // add e+ e-
 }
