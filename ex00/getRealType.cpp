@@ -29,9 +29,8 @@ int checkFloating(std::string scalar, bool sign, size_t len) {
             dot = true;
         else if (current == 'f' && (dot || e) && hasDigit)
             f = true;
-        else if (!e && i != len - 1 && current == 'e' && hasDigit &&
-                    (scalar[i + 1] == '+' || scalar[i + 1] == '-' || isdigit(scalar[i + 1]))) {
-            i = isdigit(scalar[i+1]) ? i : i + 1;
+        else if (!e && i != len - 1 && current == 'e' && hasDigit) {
+            i = (scalar[i + sign + 1] == '+' || scalar[i +  sign +  1] == '-') ? i + 1 : i;
             e = true;
             hasDigit = false;
         }
