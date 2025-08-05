@@ -31,7 +31,7 @@ int checkFloating(std::string scalar, bool sign, size_t len) {
             f = true;
         else if (!e && i != len - 1 && current == 'e' && hasDigit &&
                     (scalar[i + 1] == '+' || scalar[i + 1] == '-' || isdigit(scalar[i + 1]))) {
-            i++;
+            i = isdigit(scalar[i+1]) ? i : i + 1;
             e = true;
             hasDigit = false;
         }

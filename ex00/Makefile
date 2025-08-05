@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = convert
-CC = clang++
+CC = c++
 CFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++98 -fPIE
 CPP = getRealType.cpp ScalarConverter.cpp main.cpp
 OBJ_DIR = objects

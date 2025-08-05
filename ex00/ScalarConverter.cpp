@@ -179,7 +179,10 @@ void castFromDouble(std::string scalar) {
 void castInvalid(std::string scalar) {
 
     (void)scalar;
-    std::cout << scalar << " is not a valid char literal" << std::endl;
+    std::cout <<    "char: impossible\n"
+                    "int: impossible\n"
+                    "float: nanf\n"
+                    "double: nan" << std::endl;
 
 }
 
